@@ -15,10 +15,10 @@ SRC		=	$(SRC_DIR)strlen.s	\
 			$(SRC_DIR)memmove.s	\
 			$(SRC_DIR)strncmp.s	\
 			$(SRC_DIR)strcasecmp.s	\
-			$(SRC_DIR)rindex.s
-#			$(SRC_DIR)strstr.s	\
-#			$(SRC_DIR)strpbrk.s	\
-#			$(SRC_DIR)strcspn.s	\
+			$(SRC_DIR)rindex.s	\
+			$(SRC_DIR)strstr.s	\
+			$(SRC_DIR)strpbrk.s	\
+			$(SRC_DIR)strcspn.s
 
 OBJ		=	$(SRC:.s=.o)
 
