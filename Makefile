@@ -35,7 +35,7 @@ $(NAME):	$(OBJ)
 		nasm -felf64 $< -o $@
 
 clean:
-		@$(RM) $(OBJS)
+		@$(RM) $(OBJ)
 
 fclean:		clean
 		@$(RM) $(NAME)
