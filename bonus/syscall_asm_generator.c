@@ -5,6 +5,7 @@
 ** syscall_asm_generator
 */
 
+#include <assert.h>
 #include <fcntl.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -42,9 +43,10 @@ char *my_snprintf(const char *format, ...)
 void create_asm_file(char *syscall_name, int i)
 {
 	char *buffer;
-	char *filename = my_snprintf("./src/syscall/%s.c", file);
+	char *filename = my_snprintf("./syscall/%s.s", syscall_name);
 	int fd = open(filename, FLAGS, MODE);
 
+	assert(fd != -1);
 	buffer = my_snprintf(file, syscall_name, syscall_name, i);
 	write(fd, buffer, strlen(buffer));
 }

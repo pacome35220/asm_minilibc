@@ -10,3 +10,4 @@
 vgcore.*
 node_modules
 syscall_asm_generator
+bonus/syscall/*.s

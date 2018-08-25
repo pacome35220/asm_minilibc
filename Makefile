@@ -33,7 +33,7 @@ $(NAME):	$(OBJ)
 		$(LD) -o $(NAME) $(OBJ) $(LDFLAGS)
 
 bonus:
-		make -C $(BONUS_DIR) --no-print-directory
+		make re -C $(BONUS_DIR) --no-print-directory
 
 %.o:		%.s
 		nasm -felf64 $< -o $@

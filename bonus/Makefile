@@ -5,6 +5,8 @@
 ## Makefile
 ##
 
+SYSCALL_DIR	=	syscall/
+
 SRC		=	get_next_line.c	\
 			syscall_asm_generator.c	\
 
@@ -108,7 +110,6 @@ BONUS_SRC	=	$(SYSCALL_DIR)read.s	\
 			$(SYSCALL_DIR)getrlimit.s	\
 			$(SYSCALL_DIR)getrusage.s	\
 			$(SYSCALL_DIR)sysinfo.s	\
-			$(SYSCALL_DIR)times.s	\
 			$(SYSCALL_DIR)ptrace.s	\
 			$(SYSCALL_DIR)getuid.s	\
 			$(SYSCALL_DIR)syslog.s	\
@@ -353,22 +354,25 @@ LDFLAGS		=	-shared
 NAME		=	syscall_asm_generator
 BONUS_NAME	=	libsyscall_asm.so
 
-all:		$(NAME)
+all:		generator asm
 
-$(NAME):	$(OBJ)
+generator:	$(OBJ)
 		$(CC) -o $(NAME) $(OBJ)
-		./$(NAME)
-		$(LD) -o $(BONUS_NAME) $(OBJ) $(LDFLAGS)
+
+asm:		$(BONUS_OBJ)
+		$(LD) -o $(BONUS_NAME) $(BONUS_OBJ) $(LDFLAGS)
 
 %.o:		%.s
 		nasm -felf64 $< -o $@
 
 clean:
 		@rm -f $(OBJ)
+		@rm -f $(BONUS_OBJ)
 
 fclean:		clean
 		@rm -f $(NAME)
+		@rm -f $(BONUS_NAME)
 
-re:		fclean all
+re:		fclean generator asm
 
-.PHONY:		all clean fclean re
+.PHONY:		all clean fclean re generator asm
