@@ -45,7 +45,6 @@ void create_asm_file(char *syscall_name, int i)
 	char *filename = my_snprintf("./src/syscall/%s.c", file);
 	int fd = open(filename, FLAGS, MODE);
 
-	printf("%s\n", syscall_name);
 	buffer = my_snprintf(file, syscall_name, syscall_name, i);
 	write(fd, buffer, strlen(buffer));
 }
