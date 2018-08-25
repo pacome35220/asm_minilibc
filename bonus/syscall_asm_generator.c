@@ -41,11 +41,23 @@ void create_asm_file(char *syscall_name, int i)
 	int fd = open(filename, FLAGS, MODE);
 
 	buffer = my_snprintf(file, syscall_name, syscall_name, i);
-
+	write(fd, buffer, strlen(buffer));
 }
 
 int main()
 {
-	int fd = open("", );
+	char *line;
+	int fd = open("/usr/include/asm/unistd_64.h", O_RDONLY);
+
+	if (fd == -1) {
+		fprintf(stderr, "mdr c quoi ton os de mort\n");
+		return 1;
+	}
+	for (int i = 0; (line = get_next_line(fd)) != NULL; i++) {
+		if (i < 3 || strncmp(line, "#define __NR_", sizeof("#define __NR_")))
+			continue;
+		*strrchr(line, ' ') = '\0';
+		create_asm_file(line + sizeof("#define __NR_"), i - 3);
+	}
 	return 0;
 }
