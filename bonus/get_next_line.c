@@ -10,7 +10,7 @@
 #include <string.h>
 #include <unistd.h>
 
-char *my_strcat(char *dest, char *src)
+static char *my_strcat(char *dest, char *src)
 {
 	size_t i = 0;
 	size_t len = ((dest ? strlen(dest) : 0) + (src ? strlen(src) : 0));
@@ -29,7 +29,7 @@ char *my_strcat(char *dest, char *src)
 	return (new);
 }
 
-char *my_dup(char *src, size_t n, char *tofree)
+static char *my_dup(char *src, size_t n, char *tofree)
 {
 	size_t i = 0;
 	size_t len = (src ? strlen(src) : 0);
@@ -44,7 +44,7 @@ char *my_dup(char *src, size_t n, char *tofree)
 	return (new_str);
 }
 
-ssize_t check_back_n(char *str)
+static ssize_t check_back_n(char *str)
 {
 	if (!str)
 		return (-1);

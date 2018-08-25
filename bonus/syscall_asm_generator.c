@@ -5,9 +5,14 @@
 ** syscall_asm_generator
 */
 
+#include <fcntl.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+char *get_next_line(int fd);
 
 #define	FLAGS		(O_CREAT | O_RDWR | O_TRUNC)
 #define	MODE		(S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH)
