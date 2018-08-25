@@ -11,7 +11,7 @@ SRC		=	get_next_line.c	\
 OBJ		=	$(SRC:.c=.o)
 
 CFLAGS		=	-W -Wall -Wextra -Werror	\
-			-O3
+			-g
 
 NAME		=	syscall_asm_generator
 

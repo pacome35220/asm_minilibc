@@ -45,6 +45,7 @@ void create_asm_file(char *syscall_name, int i)
 	char *filename = my_snprintf("./src/syscall/%s.c", file);
 	int fd = open(filename, FLAGS, MODE);
 
+	printf("%s\n", syscall_name);
 	buffer = my_snprintf(file, syscall_name, syscall_name, i);
 	write(fd, buffer, strlen(buffer));
 }
@@ -59,10 +60,10 @@ int main()
 		return 1;
 	}
 	for (int i = 0; (line = get_next_line(fd)) != NULL; i++) {
-		if (i < 3 || strncmp(line, "#define __NR_", sizeof("#define __NR_")))
+		if (i < 3 || strncmp(line, "#define __NR_", sizeof("#define __NR_") - 1))
 			continue;
 		*strrchr(line, ' ') = '\0';
-		create_asm_file(line + sizeof("#define __NR_"), i - 3);
+		create_asm_file(line + sizeof("#define __NR_") - 1, i - 3);
 	}
 	return 0;
 }
