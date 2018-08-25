@@ -358,6 +358,7 @@ all:		generator asm
 
 generator:	$(OBJ)
 		$(CC) -o $(NAME) $(OBJ)
+		./$(NAME)
 
 asm:		$(BONUS_OBJ)
 		$(LD) -o $(BONUS_NAME) $(BONUS_OBJ) $(LDFLAGS)
