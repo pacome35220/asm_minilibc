@@ -343,6 +343,8 @@ BONUS_SRC	=	$(SYSCALL_DIR)read.s	\
 			$(SYSCALL_DIR)pkey_free.s	\
 			$(SYSCALL_DIR)statx.s
 
+#BONUS_SRC		+= $(SYSCALL_DIR)times.s
+
 OBJ		=	$(SRC:.c=.o)
 BONUS_OBJ	=	$(BONUS_SRC:.s=.o)
 
