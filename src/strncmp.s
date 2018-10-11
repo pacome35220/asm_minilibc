@@ -3,6 +3,8 @@
 
 strncmp:
 	xor	rax, rax
+	cmp	rdx, 0
+	jz	.EXIT
 	dec	rdx
 
 .LOOP:
