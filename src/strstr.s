@@ -3,6 +3,11 @@
 
 strstr:
 	mov	rax, rdi
+	cmp	BYTE[rax], 0	; if (*s1 == '\0') && ... => handle strstr("", "")
+	jnz	.LOOP
+	cmp	BYTE[rsi], 0	; ... (*s2 == '\0') => return s1
+	jnz	.LOOP
+	ret
 
 .LOOP:
 	cmp	BYTE[rax], 0
