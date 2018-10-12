@@ -18,7 +18,8 @@ SRC		=				\
 		$(SRC_DIR)tests-my_strcspn.c	\
 		$(SRC_DIR)tests-my_strpbrk.c	\
 		$(SRC_DIR)tests-my_strncmp.c	\
-		$(SRC_DIR)tests-my_strcasecmp.c
+		$(SRC_DIR)tests-my_strcasecmp.c	\
+		$(SRC_DIR)tests-my_atoi.c
 
 OBJ		=	$(SRC:.c=.o)
 

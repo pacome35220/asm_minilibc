@@ -20,7 +20,8 @@ SRC		=	$(SRC_DIR)strlen.s	\
 			$(SRC_DIR)rindex.s	\
 			$(SRC_DIR)strstr.s	\
 			$(SRC_DIR)strpbrk.s	\
-			$(SRC_DIR)strcspn.s
+			$(SRC_DIR)strcspn.s	\
+			$(SRC_DIR)atoi.s
 
 OBJ		=	$(SRC:.s=.o)
 
