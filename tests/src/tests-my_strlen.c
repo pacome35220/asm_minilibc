@@ -5,6 +5,7 @@
 ** test strlen
 */
 
+#include <assert.h>
 #include <criterion/criterion.h>
 
 #include <stdio.h>
@@ -13,24 +14,19 @@
 
 #include <dlfcn.h>
 
+void	*handle;
+size_t	(*my_strlen)(char*);
+
 Test(utils, simple_strlen)
 {
-	void	*handle;
-	size_t	(*my_strlen)(char*);
-	char	*error;
 	char	*str = strdup("bonjour");
 
-	if (!str)
-		exit(84);
+	assert(str);
 	handle = dlopen("./libasm.so", RTLD_LAZY);
 	if (!handle)
 		exit(84);
 	my_strlen = dlsym(handle, "strlen");
-	error = dlerror();
-	if (error != NULL) {
-		printf("%s\n", error);
-		exit(84);
-	}
+	assert(!dlerror());
 	cr_assert(strlen(str) == (*my_strlen)(str));
 	dlclose(handle);
 	free(str);
@@ -38,22 +34,14 @@ Test(utils, simple_strlen)
 
 Test(utils, strlen_empty_string)
 {
-	void	*handle;
-	size_t	(*my_strlen)(char*);
-	char	*error;
 	char	*str = strdup("");
 
-	if (!str)
-		exit(84);
+	assert(str);
 	handle = dlopen("./libasm.so", RTLD_LAZY);
 	if (!handle)
 		exit(84);
 	my_strlen = dlsym(handle, "strlen");
-	error = dlerror();
-	if (error != NULL) {
-		printf("%s\n", error);
-		exit(84);
-	}
+	assert(!dlerror());
 	cr_assert(strlen(str) == (*my_strlen)(str));
 	dlclose(handle);
 	free(str);
