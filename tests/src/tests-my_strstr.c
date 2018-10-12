@@ -36,8 +36,6 @@ Test(utils, simple_strstr)
 
 Test(utils, strstr_not_found)
 {
-	void	*handle;
-	char	*(*my_strstr)(const char*,const char*);
 	char	*str = strdup("bonjour");
 	char	*my_ret;
 
