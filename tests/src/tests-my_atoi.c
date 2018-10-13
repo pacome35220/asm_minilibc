@@ -7,144 +7,24 @@
 
 #include <assert.h>
 #include <criterion/criterion.h>
-
-#include <stdio.h>
-
 #include <dlfcn.h>
 
-void	*handle;
-int	(*my_atoi)(const char *);
-
-Test(utils, 42)
+Test(utils, atoi)
 {
-	char *str = strdup("42");
-	int ret_sys;
-	int my_ret;
+	int	(*my_atoi)(const char *);
+	void	*handle = dlopen("./libasm.so", RTLD_LAZY);
 
-	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
+	assert(handle);
 	my_atoi = dlsym(handle, "atoi");
 	assert(!dlerror());
-	ret_sys = atoi(str);
-	my_ret = (*my_atoi)(str);
-	printf("%d ; %d\n", ret_sys, my_ret);
-	cr_assert(ret_sys == my_ret);
+
+	cr_assert(atoi("42") == (*my_atoi)("42"));
+	cr_assert(atoi("14333") == (*my_atoi)("14333"));
+	cr_assert(atoi("0") == (*my_atoi)("0"));
+	cr_assert(atoi("-1") == (*my_atoi)("-1"));
+	cr_assert(atoi("-1254234") == (*my_atoi)("-1254234"));
+	cr_assert(atoi("243435544444524524") == (*my_atoi)("243435544444524524"));
+	cr_assert(atoi("-243435544444524524") == (*my_atoi)("-243435544444524524"));
+
 	dlclose(handle);
-	free(str);
-}
-
-Test(utils, 14324)
-{
-	char *str = strdup("14324");
-	int ret_sys;
-	int my_ret;
-
-	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_atoi = dlsym(handle, "atoi");
-	assert(!dlerror());
-	ret_sys = atoi(str);
-	my_ret = (*my_atoi)(str);
-	cr_assert(ret_sys == my_ret);
-	dlclose(handle);
-	free(str);
-}
-
-Test(utils, 0)
-{
-	char *str = strdup("0");
-	int ret_sys;
-	int my_ret;
-
-	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_atoi = dlsym(handle, "atoi");
-	assert(!dlerror());
-	ret_sys = atoi(str);
-	my_ret = (*my_atoi)(str);
-	cr_assert(ret_sys == my_ret);
-	dlclose(handle);
-	free(str);
-}
-
-Test(utils, minus1)
-{
-	char *str = strdup("-1");
-	int ret_sys;
-	int my_ret;
-
-	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_atoi = dlsym(handle, "atoi");
-	assert(!dlerror());
-	ret_sys = atoi(str);
-	my_ret = (*my_atoi)(str);
-	cr_assert(ret_sys == my_ret);
-	dlclose(handle);
-	free(str);
-}
-
-Test(utils, minus42)
-{
-	char *str = strdup("-42");
-	int ret_sys;
-	int my_ret;
-
-	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_atoi = dlsym(handle, "atoi");
-	assert(!dlerror());
-	ret_sys = atoi(str);
-	my_ret = (*my_atoi)(str);
-	cr_assert(ret_sys == my_ret);
-	dlclose(handle);
-	free(str);
-}
-
-Test(utils, overflow)
-{
-	char *str = strdup("234567765432456543");
-	int ret_sys;
-	int my_ret;
-
-	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_atoi = dlsym(handle, "atoi");
-	assert(!dlerror());
-	ret_sys = atoi(str);
-	my_ret = (*my_atoi)(str);
-	cr_assert(ret_sys == my_ret);
-	dlclose(handle);
-	free(str);
-}
-
-Test(utils, underflow)
-{
-	char *str = strdup("-234567765432456543");
-	int ret_sys;
-	int my_ret;
-
-	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_atoi = dlsym(handle, "atoi");
-	assert(!dlerror());
-	ret_sys = atoi(str);
-	my_ret = (*my_atoi)(str);
-	cr_assert(ret_sys == my_ret);
-	dlclose(handle);
-	free(str);
 }

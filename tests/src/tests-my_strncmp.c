@@ -7,140 +7,89 @@
 
 #include <assert.h>
 #include <criterion/criterion.h>
-
-#include <stdio.h>
-#include <string.h>
-
 #include <dlfcn.h>
 
 void	*handle;
 int	(*my_strncmp)(const char*, const char*, size_t);
+char	*str;
+char	*str2;
 
-Test(utils, simple_strncmp)
+static void init(void)
 {
-	char	*str = strdup("bonjour");
-	char	*str2 = strdup("hello");
-
-	assert(str && str2);
 	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
+	assert(handle);
 	my_strncmp = dlsym(handle, "strncmp");
 	assert(!dlerror());
-	cr_assert(strncmp(str, str2, 5) == (*my_strncmp)(str, str2, 5));
-	dlclose(handle);
-	free(str);
 }
 
-Test(utils, good_strncmp)
+static void fini(void)
 {
-	char	*str = strdup("bonjour");
-	char	*str2 = strdup("bonjour");
-
-	assert(str && str2);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strncmp = dlsym(handle, "strncmp");
-	assert(!dlerror());
-	cr_assert(strncmp(str, str2, 5) == (*my_strncmp)(str, str2, 5));
 	dlclose(handle);
 	free(str);
+	free(str2);
 }
 
-Test(utils, good_strncmp2)
+Test(utils, simple_strncmp, .init = init, .fini = fini)
 {
-	char	*str = strdup("bonjour");
-	char	*str2 = strdup("bonjour");
-
+	str = strdup("bonjour");
+	str2 = strdup("hello");
 	assert(str && str2);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strncmp = dlsym(handle, "strncmp");
-	assert(!dlerror());
+	cr_assert(strncmp(str, str2, 5) == (*my_strncmp)(str, str2, 5));
+}
+
+Test(utils, good_strncmp, .init = init, .fini = fini)
+{
+	str = strdup("bonjour");
+	str2 = strdup("bonjour");
+	assert(str && str2);
+	cr_assert(strncmp(str, str2, 5) == (*my_strncmp)(str, str2, 5));
+}
+
+Test(utils, good_strncmp2, .init = init, .fini = fini)
+{
+	str = strdup("bonjour");
+	str2 = strdup("bonjour");
+	assert(str && str2);
 	cr_assert(strncmp(str, str2, 20) == (*my_strncmp)(str, str2, 20));
-	dlclose(handle);
-	free(str);
 }
 
-Test(utils, good_strncmp3)
+Test(utils, good_strncmp3, .init = init, .fini = fini)
 {
-	char	*str = strdup("bonjour");
-	char	*str2 = strdup("bonjour2");
-
+	str = strdup("bonjour");
+	str2 = strdup("bonjour2");
 	assert(str && str2);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strncmp = dlsym(handle, "strncmp");
-	assert(!dlerror());
 	cr_assert(strncmp(str, str2, 5) == (*my_strncmp)(str, str2, 5));
-	dlclose(handle);
-	free(str);
 }
 
-Test(utils, good_strncmp4)
+Test(utils, good_strncmp4, .init = init, .fini = fini)
 {
-	char	*str = strdup("bonjour2");
-	char	*str2 = strdup("bonjour");
-
+	str = strdup("bonjour2");
+	str2 = strdup("bonjour");
 	assert(str && str2);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strncmp = dlsym(handle, "strncmp");
-	assert(!dlerror());
 	cr_assert(strncmp(str, str2, 5) == (*my_strncmp)(str, str2, 5));
-	dlclose(handle);
-	free(str);
 }
 
-Test(utils, not_good_strncmp)
+Test(utils, not_good_strncmp, .init = init, .fini = fini)
 {
-	char	*str = strdup("One more test!");
-	char	*str2 = strdup("One more");
-
+	str = strdup("One more test!");
+	str2 = strdup("One more");
 	assert(str && str2);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strncmp = dlsym(handle, "strncmp");
-	assert(!dlerror());
 	cr_assert(strncmp(str, str2, 8) == (*my_strncmp)(str, str2, 8));
-	dlclose(handle);
-	free(str);
 }
 
-Test(utils, not_good_strncmp2)
+Test(utils, not_good_strncmp2, .init = init, .fini = fini)
 {
-	char	*str = strdup("One More Test!");
-	char	*str2 = strdup("One more");
-
+	str = strdup("One More Test!");
+	str2 = strdup("One more");
 	assert(str && str2);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strncmp = dlsym(handle, "strncmp");
-	assert(!dlerror());
 	cr_assert(strncmp(str, str2, 8) == (*my_strncmp)(str, str2, 8));
 	cr_assert(strncmp(str, str2, 16) == (*my_strncmp)(str, str2, 16));
-	dlclose(handle);
-	free(str);
 }
 
-Test(utils, not_0_check)
+Test(utils, not_0_check, .init = init, .fini = fini)
 {
-	char	*str = strdup(" ");
-	char	*str2 = strdup("");
-
+	str = strdup(" ");
+	str2 = strdup("");
 	assert(str && str2);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strncmp = dlsym(handle, "strncmp");
-	assert(!dlerror());
 	cr_assert(strncmp(str, str2, 0) == (*my_strncmp)(str, str2, 0));
-	dlclose(handle);
-	free(str);
 }

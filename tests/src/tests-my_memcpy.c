@@ -7,44 +7,66 @@
 
 #include <assert.h>
 #include <criterion/criterion.h>
-
-#include <stdio.h>
-
 #include <dlfcn.h>
 
 void	*handle;
 void	*(*my_memcpy)(void*, const void *, size_t);
+char	*str;
+char	*ret;
+char	*sys;
 
-Test(utils, simple_memcpy)
+static void init(void)
 {
-	char	*str = strdup("bonjour");
-	char	*str2 = strdup("hellooo");
-
-	assert(str && str2);
 	handle = dlopen("./libasm.so", RTLD_LAZY);
 	assert(handle);
 	my_memcpy = dlsym(handle, "memcpy");
 	assert(!dlerror());
-	str = (*my_memcpy)(str, str2, strlen(str));
-	cr_assert(strcmp(str, str2) == 0);
+}
+
+static void fini(void)
+{
 	dlclose(handle);
 	free(str);
 }
 
-Test(utils, simple_memcpy_zero_char)
+Test(utils, simple_memcpy, .init = init, .fini = fini)
 {
-	char	*str = strdup("bonjour");
-	char	*str_sys = strdup("bonjour");
-	char	*str2 = strdup("hellooo");
+	char buff1[32] = "";
+	char buff2[32] = "";
 
-	assert(str && str2);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	assert(handle);
-	my_memcpy = dlsym(handle, "memcpy");
-	assert(!dlerror());
-	str = (*my_memcpy)(str, str2, 0);
-	str_sys = memcpy(str_sys, str2, 0);
-	cr_assert(strcmp(str, str_sys) == 0);
-	dlclose(handle);
-	free(str);
+	str = strdup("zfdergfcvtrryhtyt");
+	assert(str);
+
+	ret = (*my_memcpy)(buff1, str, strlen(str));
+	sys = memcpy(buff2, str, strlen(str));
+	cr_assert(strcmp(buff1, buff2) == 0);
+	cr_assert(ret == buff1 && sys == buff2);
+}
+
+Test(utils, empty, .init = init, .fini = fini)
+{
+	char buff1[32] = "";
+	char buff2[32] = "";
+
+	str = strdup("");
+	assert(str);
+
+	ret = (*my_memcpy)(buff1, str, strlen(str));
+	sys = memcpy(buff2, str, strlen(str));
+	cr_assert(ret == buff1 && sys == buff2);
+	cr_assert(strcmp(buff1, buff2) == 0);
+}
+
+Test(utils, one_char, .init = init, .fini = fini)
+{
+	char buff1[32] = "";
+	char buff2[32] = "";
+
+	str = strdup("a");
+	assert(str);
+
+	ret = (*my_memcpy)(buff1, str, strlen(str));
+	sys = memcpy(buff2, str, strlen(str));
+	cr_assert(ret == buff1 && sys == buff2);
+	cr_assert(strcmp(buff1, buff2) == 0);
 }

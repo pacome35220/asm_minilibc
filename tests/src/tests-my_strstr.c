@@ -7,120 +7,76 @@
 
 #include <assert.h>
 #include <criterion/criterion.h>
-
-#include <stdio.h>
-
 #include <dlfcn.h>
 
 void	*handle;
 char	*(*my_strstr)(const char*, const char*);
+char	*str;
+char	*ret_sys;
+char	*my_ret;
 
-Test(utils, simple_strstr)
+static void init(void)
 {
-	char	*str = strdup("bonjour");
-	char	*ret_sys;
-	char	*my_ret;
-
-	assert(str);
 	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
+	assert(handle);
 	my_strstr = dlsym(handle, "strstr");
 	assert(!dlerror());
+}
+
+static void fini(void)
+{
+	dlclose(handle);
+	free(str);
+}
+
+Test(utils, simple_strstr, .init = init, .fini = fini)
+{
+	str = strdup("bonjour");
+	assert(str);
 	ret_sys = strstr(str, "jour");
 	my_ret = (*my_strstr)(str, "jour");
 	cr_assert(strcmp(ret_sys, my_ret) == 0);
-	dlclose(handle);
-	free(str);
 }
 
-Test(utils, strstr_not_found)
+Test(utils, strstr_not_found, .init = init, .fini = fini)
 {
-	char	*str = strdup("bonjour");
-	char	*my_ret;
-
+	str = strdup("bonjour");
 	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strstr = dlsym(handle, "strstr");
-	assert(!dlerror());
 	my_ret = (*my_strstr)(str, "bite");
 	cr_assert(my_ret == NULL);
-	dlclose(handle);
-	free(str);
 }
 
-Test(utils, strstr_empty_string)
+Test(utils, strstr_empty_string, .init = init, .fini = fini)
 {
-	char	*str = strdup("");
-	char	*my_ret;
-
+	str = strdup("");
 	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strstr = dlsym(handle, "strstr");
-	assert(!dlerror());
 	my_ret = (*my_strstr)(str, "bite");
 	cr_assert(my_ret == NULL);
-	dlclose(handle);
-	free(str);
 }
 
-Test(utils, strstr_one_char)
+Test(utils, strstr_one_char, .init = init, .fini = fini)
 {
-	char	*str = strdup("z");
-	char	*my_ret;
-
+	str = strdup("z");
 	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strstr = dlsym(handle, "strstr");
-	assert(!dlerror());
 	my_ret = (*my_strstr)(str, "z");
-	char	*test;
-	test = strstr(str, "z");
-	cr_assert(strcmp(test, my_ret) == 0);
-	dlclose(handle);
-	free(str);
+	ret_sys = strstr(str, "z");
+	cr_assert(strcmp(ret_sys, my_ret) == 0);
 }
 
-Test(utils, strstr_two_empty)
+Test(utils, strstr_two_empty, .init = init, .fini = fini)
 {
-	char	*str = strdup("");
-	char	*my_ret;
-
+	str = strdup("");
 	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strstr = dlsym(handle, "strstr");
-	assert(!dlerror());
 	my_ret = (*my_strstr)(str, "");
-	char	*test;
-	test = strstr(str, "");
-	cr_assert(strcmp(test, my_ret) == 0);
-	dlclose(handle);
-	free(str);
+	ret_sys = strstr(str, "");
+	cr_assert(strcmp(ret_sys, my_ret) == 0);
 }
 
-Test(utils, strstr_second_empty)
+Test(utils, strstr_second_empty, .init = init, .fini = fini)
 {
-	char	*str = strdup("bonjour");
-	char	*my_ret;
-
+	str = strdup("bonjour");
 	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strstr = dlsym(handle, "strstr");
-	assert(!dlerror());
 	my_ret = (*my_strstr)(str, "");
-	char	*test;
-	test = strstr(str, "");
-	cr_assert(strcmp(test, my_ret) == 0);
-	dlclose(handle);
-	free(str);
+	ret_sys = strstr(str, "");
+	cr_assert(strcmp(ret_sys, my_ret) == 0);
 }

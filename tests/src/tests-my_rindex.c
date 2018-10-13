@@ -6,12 +6,7 @@
 */
 
 #include <assert.h>
-
 #include <criterion/criterion.h>
-
-#include <stdio.h>
-#include <string.h>
-
 #include <dlfcn.h>
 
 void	*handle;
@@ -25,8 +20,7 @@ Test(utils, simple_rindex)
 
 	assert(str);
 	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
+	assert(handle);
 	my_rindex = dlsym(handle, "rindex");
 	assert(!dlerror());
 	ret_sys = rindex(str, 'j');
@@ -43,8 +37,7 @@ Test(utils, rindex_not_found)
 
 	assert(str);
 	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
+	assert(handle);
 	my_rindex = dlsym(handle, "rindex");
 	assert(!dlerror());
 	my_ret = (*my_rindex)(str, 'z');
@@ -60,8 +53,7 @@ Test(utils, rindex_empty_string)
 
 	assert(str);
 	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
+	assert(handle);
 	my_rindex = dlsym(handle, "rindex");
 	assert(!dlerror());
 	my_ret = (*my_rindex)(str, 'z');
@@ -77,8 +69,7 @@ Test(utils, rindex_one_char)
 
 	assert(str);
 	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
+	assert(handle);
 	my_rindex = dlsym(handle, "rindex");
 	assert(!dlerror());
 	my_ret = (*my_rindex)(str, 'z');

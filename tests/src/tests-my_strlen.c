@@ -7,42 +7,36 @@
 
 #include <assert.h>
 #include <criterion/criterion.h>
-
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
 #include <dlfcn.h>
 
 void	*handle;
 size_t	(*my_strlen)(char*);
+char	*str;
 
-Test(utils, simple_strlen)
+static void init(void)
 {
-	char	*str = strdup("bonjour");
-
-	assert(str);
 	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
+	assert(handle);
 	my_strlen = dlsym(handle, "strlen");
 	assert(!dlerror());
-	cr_assert(strlen(str) == (*my_strlen)(str));
+}
+
+static void fini(void)
+{
 	dlclose(handle);
 	free(str);
 }
 
-Test(utils, strlen_empty_string)
+Test(utils, simple_strlen, .init = init, .fini = fini)
 {
-	char	*str = strdup("");
-
+	str = strdup("bonjour");
 	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strlen = dlsym(handle, "strlen");
-	assert(!dlerror());
 	cr_assert(strlen(str) == (*my_strlen)(str));
-	dlclose(handle);
-	free(str);
+}
+
+Test(utils, strlen_empty_string, .init = init, .fini = fini)
+{
+	str = strdup("");
+	assert(str);
+	cr_assert(strlen(str) == (*my_strlen)(str));
 }

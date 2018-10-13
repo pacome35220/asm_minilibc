@@ -7,74 +7,88 @@
 
 #include <assert.h>
 #include <criterion/criterion.h>
-
-#include <stdio.h>
-
 #include <dlfcn.h>
 
 void	*handle;
 int	(*my_strcmp)(const char*, const char*);
+char	*str;
+char	*str2;
 
-Test(utils, simple_strcmp)
+static void init(void)
 {
-	char	*str = strdup("bonjour");
-	char	*str2 = strdup("hello");
-
-	assert(str && str2);
 	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
+	assert(handle);
 	my_strcmp = dlsym(handle, "strcmp");
 	assert(!dlerror());
-	cr_assert(strcmp(str, str2) == (*my_strcmp)(str, str2));
-	dlclose(handle);
-	free(str);
 }
 
-Test(utils, good_strcmp)
+static void fini(void)
 {
-	char	*str = strdup("bonjour");
-	char	*str2 = strdup("bonjour");
-
-	assert(str && str2);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strcmp = dlsym(handle, "strcmp");
-	assert(!dlerror());
-	cr_assert(strcmp(str, str2) == (*my_strcmp)(str, str2));
 	dlclose(handle);
 	free(str);
+	free(str2);
 }
 
-Test(utils, not_good_strcmp)
+Test(utils, empty1_strcmp, .init = init, .fini = fini)
 {
-	char	*str = strdup("bonjour");
-	char	*str2 = strdup("bonjour2");
-
+	str = strdup("");
+	str2 = strdup("hello");
 	assert(str && str2);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strcmp = dlsym(handle, "strcmp");
-	assert(!dlerror());
 	cr_assert(strcmp(str, str2) == (*my_strcmp)(str, str2));
-	dlclose(handle);
-	free(str);
 }
 
-Test(utils, not_good_strcmp2)
+Test(utils, empty2_strcmp, .init = init, .fini = fini)
 {
-	char	*str = strdup("bonjour2");
-	char	*str2 = strdup("bonjour");
-
+	str = strdup("deded");
+	str2 = strdup("");
 	assert(str && str2);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strcmp = dlsym(handle, "strcmp");
-	assert(!dlerror());
 	cr_assert(strcmp(str, str2) == (*my_strcmp)(str, str2));
-	dlclose(handle);
-	free(str);
+}
+
+Test(utils, both_empty_strcmp, .init = init, .fini = fini)
+{
+	str = strdup("");
+	str2 = strdup("");
+	assert(str && str2);
+	cr_assert(strcmp(str, str2) == (*my_strcmp)(str, str2));
+}
+
+Test(utils, both_1_char_strcmp, .init = init, .fini = fini)
+{
+	str = strdup("a");
+	str2 = strdup("a");
+	assert(str && str2);
+	cr_assert(strcmp(str, str2) == (*my_strcmp)(str, str2));
+}
+
+Test(utils, simple_strcmp, .init = init, .fini = fini)
+{
+	str = strdup("bonjour");
+	str2 = strdup("hello");
+	assert(str && str2);
+	cr_assert(strcmp(str, str2) == (*my_strcmp)(str, str2));
+}
+
+Test(utils, good_strcmp, .init = init, .fini = fini)
+{
+	str = strdup("bonjour");
+	str2 = strdup("bonjour");
+	assert(str && str2);
+	cr_assert(strcmp(str, str2) == (*my_strcmp)(str, str2));
+}
+
+Test(utils, not_good_strcmp, .init = init, .fini = fini)
+{
+	str = strdup("bonjour");
+	str2 = strdup("bonjour23243242");
+	assert(str && str2);
+	cr_assert(strcmp(str, str2) == (*my_strcmp)(str, str2));
+}
+
+Test(utils, not_good_strcmp2, .init = init, .fini = fini)
+{
+	str = strdup("bonjour221332213");
+	str2 = strdup("bonjour");
+	assert(str && str2);
+	cr_assert(strcmp(str, str2) == (*my_strcmp)(str, str2));
 }

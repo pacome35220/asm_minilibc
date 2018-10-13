@@ -7,131 +7,72 @@
 
 #include <assert.h>
 #include <criterion/criterion.h>
-
-#include <stdio.h>
-#include <string.h>
-
 #include <dlfcn.h>
 
-void    *handle;
-int    (*my_strcspn)(const char*, const char*);
+void	*handle;
+size_t	(*my_strcspn)(const char*, const char*);
+char	*str;
+char	*str2;
 
-Test(strcspn, simple_strcspn)
+static void init(void)
 {
-	char    *str = strdup("bonjour");
-	char    *str2 = strdup("o");
-	int    ret_sys;
-	int    my_ret;
-
-	assert(str);
 	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
+	assert(handle);
 	my_strcspn = dlsym(handle, "strcspn");
 	assert(!dlerror());
-	ret_sys = strcspn(str, str2);
-	my_ret = (*my_strcspn)(str, str2);
-	cr_assert(ret_sys == my_ret);
-	dlclose(handle);
-	free(str);
 }
 
-Test(strcspn, simple_strcspn2)
+static void fini(void)
 {
-	char    *str = strdup("bonjour");
-	char    *str2 = strdup("or");
-	int    ret_sys;
-	int    my_ret;
-
-	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strcspn = dlsym(handle, "strcspn");
-	assert(!dlerror());
-	ret_sys = strcspn(str, str2);
-	my_ret = (*my_strcspn)(str, str2);
-	cr_assert(ret_sys == my_ret);
 	dlclose(handle);
 	free(str);
+	free(str2);
 }
 
-Test(strcspn, simple_strcspn3)
+Test(strcspn, simple_strcspn, .init = init, .fini = fini)
 {
-	char    *str = strdup("bonjour");
-	char    *str2 = strdup("slt");
-	int    ret_sys;
-	int    my_ret;
-
-	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strcspn = dlsym(handle, "strcspn");
-	assert(!dlerror());
-	ret_sys = strcspn(str, str2);
-	my_ret = (*my_strcspn)(str, str2);
-	cr_assert(ret_sys == my_ret);
-	dlclose(handle);
-	free(str);
+	str = strdup("bonjour");
+	str2 = strdup("o");
+	assert(str && str2);
+	cr_assert(strcspn(str, str2) == (*my_strcspn)(str, str2));
 }
 
-Test(strcspn, first_empty)
+Test(strcspn, simple_strcspn2, .init = init, .fini = fini)
 {
-	char    *str = strdup("");
-	char    *str2 = strdup("abcd");
-	int    ret_sys;
-	int    my_ret;
-
-	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strcspn = dlsym(handle, "strcspn");
-	assert(!dlerror());
-	ret_sys = strcspn(str, str2);
-	my_ret = (*my_strcspn)(str, str2);
-	cr_assert(ret_sys == my_ret);
-	dlclose(handle);
-	free(str);
+	str = strdup("bonjour");
+	str2 = strdup("or");
+	assert(str && str2);
+	cr_assert(strcspn(str, str2) == (*my_strcspn)(str, str2));
 }
 
-Test(strcspn, second_empty)
+Test(strcspn, simple_strcspn3, .init = init, .fini = fini)
 {
-	char    *str = strdup("bonjour");
-	char    *str2 = strdup("");
-	int    ret_sys;
-	int    my_ret;
-
-	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strcspn = dlsym(handle, "strcspn");
-	assert(!dlerror());
-	ret_sys = strcspn(str, str2);
-	my_ret = (*my_strcspn)(str, str2);
-	cr_assert(ret_sys == my_ret);
-	dlclose(handle);
-	free(str);
+	str = strdup("bonjour");
+	str2 = strdup("slt");
+	assert(str && str2);
+	cr_assert(strcspn(str, str2) == (*my_strcspn)(str, str2));
 }
 
-Test(strcspn, both_empty)
+Test(strcspn, first_empty, .init = init, .fini = fini)
 {
-	char    *str = strdup("");
-	char    *str2 = strdup("");
-	int    ret_sys;
-	int    my_ret;
+	str = strdup("");
+	str2 = strdup("abcd");
+	assert(str && str2);
+	cr_assert(strcspn(str, str2) == (*my_strcspn)(str, str2));
+}
 
-	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	if (!handle)
-		exit(84);
-	my_strcspn = dlsym(handle, "strcspn");
-	assert(!dlerror());
-	ret_sys = strcspn(str, str2);
-	my_ret = (*my_strcspn)(str, str2);
-	cr_assert(ret_sys == my_ret);
-	dlclose(handle);
-	free(str);
+Test(strcspn, second_empty, .init = init, .fini = fini)
+{
+	str = strdup("bonjour");
+	str2 = strdup("");
+	assert(str && str2);
+	cr_assert(strcspn(str, str2) == (*my_strcspn)(str, str2));
+}
+
+Test(strcspn, both_empty, .init = init, .fini = fini)
+{
+	str = strdup("");
+	str2 = strdup("");
+	assert(str && str2);
+	cr_assert(strcspn(str, str2) == (*my_strcspn)(str, str2));
 }
