@@ -19,14 +19,14 @@ SRC		=				\
 		$(SRC_DIR)tests-my_strpbrk.c	\
 		$(SRC_DIR)tests-my_strncmp.c	\
 		$(SRC_DIR)tests-my_strcasecmp.c	\
-		$(SRC_DIR)tests-my_atoi.c
+		$(SRC_DIR)tests-my_atoi.c	\
+		$(SRC_DIR)tests-my_putchar.c
 
 OBJ		=	$(SRC:.c=.o)
 
 LDFLAGS		=	-lcriterion --coverage -ldl
 
-CFLAGS		+=	-W -Wall -Wextra	\
-			-O3
+CFLAGS		+=	-W -Wall -Wextra
 
 NAME		=	test
 

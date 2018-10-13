@@ -21,7 +21,9 @@ SRC		=	$(SRC_DIR)strlen.s	\
 			$(SRC_DIR)strstr.s	\
 			$(SRC_DIR)strpbrk.s	\
 			$(SRC_DIR)strcspn.s	\
-			$(SRC_DIR)atoi.s
+			$(SRC_DIR)atoi.s	\
+			$(SRC_DIR)putchar.s	\
+			$(SRC_DIR)puts.s
 
 OBJ		=	$(SRC:.s=.o)
 
@@ -51,7 +53,7 @@ fclean:		clean
 		@$(RM) $(NAME)
 
 tests_run:	re
-		@mv $(NAME) $(TESTS_DIR)
+		mv $(NAME) $(TESTS_DIR)
 		@make -C $(TESTS_DIR) --no-print-directory
 
 re:		fclean all

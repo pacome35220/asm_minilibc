@@ -36,8 +36,6 @@ Test(utils, simple_strchr, .init = init, .fini = fini)
 	ret_sys = strchr(str, 'j');
 	my_ret = (*my_strchr)(str, 'j');
 	cr_assert(strcmp(ret_sys, my_ret) == 0);
-	dlclose(handle);
-	free(str);
 }
 
 Test(utils, strchr_not_found, .init = init, .fini = fini)
@@ -46,8 +44,6 @@ Test(utils, strchr_not_found, .init = init, .fini = fini)
 	assert(str);
 	my_ret = (*my_strchr)(str, 'z');
 	cr_assert(my_ret == NULL);
-	dlclose(handle);
-	free(str);
 }
 
 Test(utils, strchr_empty_string, .init = init, .fini = fini)
@@ -56,8 +52,6 @@ Test(utils, strchr_empty_string, .init = init, .fini = fini)
 	assert(str);
 	my_ret = (*my_strchr)(str, 'z');
 	cr_assert(my_ret == NULL);
-	dlclose(handle);
-	free(str);
 }
 
 Test(utils, strchr_one_char, .init = init, .fini = fini)
@@ -67,8 +61,6 @@ Test(utils, strchr_one_char, .init = init, .fini = fini)
 	my_ret = (*my_strchr)(str, 'z');
 	ret_sys = strchr(str, 'z');
 	cr_assert(strcmp(ret_sys, my_ret) == 0);
-	dlclose(handle);
-	free(str);
 }
 
 Test(utils, strchr_zero, .init = init, .fini = fini)
@@ -76,5 +68,4 @@ Test(utils, strchr_zero, .init = init, .fini = fini)
 	ret_sys = strchr("bonjour", 0);
 	my_ret = (*my_strchr)("bonjour", 0);
 	cr_assert(strcmp(ret_sys, my_ret) == 0);
-	dlclose(handle);
 }

@@ -24,7 +24,8 @@ Test(utils, atoi)
 	cr_assert(atoi("-1") == (*my_atoi)("-1"));
 	cr_assert(atoi("-1254234") == (*my_atoi)("-1254234"));
 	cr_assert(atoi("243435544444524524") == (*my_atoi)("243435544444524524"));
-	cr_assert(atoi("-243435544444524524") == (*my_atoi)("-243435544444524524"));
-
+	cr_assert(atoi("mdr") == (*my_atoi)("mdr"));
+	cr_assert(atoi("34234émdr") == (*my_atoi)("34234émdr"));
+	cr_assert(atoi("lol34234émdr") == (*my_atoi)("lol34234émdr"));
 	dlclose(handle);
 }

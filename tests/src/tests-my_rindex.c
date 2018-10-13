@@ -11,71 +11,54 @@
 
 void	*handle;
 char	*(*my_rindex)(char*, int);
+char	*str;
+char	*ret_sys;
+char	*my_ret;
 
-Test(utils, simple_rindex)
+static void init(void)
 {
-	char	*str = strdup("bonjour");
-	char	*ret_sys;
-	char	*my_ret;
-
-	assert(str);
 	handle = dlopen("./libasm.so", RTLD_LAZY);
 	assert(handle);
 	my_rindex = dlsym(handle, "rindex");
 	assert(!dlerror());
+}
+
+static void fini(void)
+{
+	dlclose(handle);
+	free(str);
+}
+
+Test(utils, simple_rindex, .init = init, .fini = fini)
+{
+	str = strdup("bonjour");
+	assert(str);
 	ret_sys = rindex(str, 'j');
 	my_ret = (*my_rindex)(str, 'j');
 	cr_assert(strcmp(ret_sys, my_ret) == 0);
-	dlclose(handle);
-	free(str);
 }
 
-Test(utils, rindex_not_found)
+Test(utils, rindex_not_found, .init = init, .fini = fini)
 {
-	char	*str = strdup("bonjour");
-	char	*my_ret;
-
+	str = strdup("bonjour");
 	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	assert(handle);
-	my_rindex = dlsym(handle, "rindex");
-	assert(!dlerror());
 	my_ret = (*my_rindex)(str, 'z');
 	cr_assert(my_ret == NULL);
-	dlclose(handle);
-	free(str);
 }
 
-Test(utils, rindex_empty_string)
+Test(utils, rindex_empty_string, .init = init, .fini = fini)
 {
-	char	*str = strdup("");
-	char	*my_ret;
-
+	str = strdup("");
 	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	assert(handle);
-	my_rindex = dlsym(handle, "rindex");
-	assert(!dlerror());
 	my_ret = (*my_rindex)(str, 'z');
 	cr_assert(my_ret == NULL);
-	dlclose(handle);
-	free(str);
 }
 
-Test(utils, rindex_one_char)
+Test(utils, rindex_one_char, .init = init, .fini = fini)
 {
-	char	*str = strdup("z");
-	char	*my_ret;
-
+	str = strdup("z");
 	assert(str);
-	handle = dlopen("./libasm.so", RTLD_LAZY);
-	assert(handle);
-	my_rindex = dlsym(handle, "rindex");
-	assert(!dlerror());
 	my_ret = (*my_rindex)(str, 'z');
-	char	*test;
-	test = rindex(str, 'z');
-	cr_assert(strcmp(test, my_ret) == 0);
-	dlclose(handle);
-	free(str);
+	ret_sys = rindex(str, 'z');
+	cr_assert(strcmp(ret_sys, my_ret) == 0);
 }
