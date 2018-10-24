@@ -5,7 +5,7 @@ atoi:
 	xor	eax, eax	; set integer result to 0, eax is 32-bit part of rax
 	xor	r8, r8		; set r8 to 0
 	cmp	BYTE[rdi], 0x2D	; 0x2D => '-'
-	jnz	.LOOP		; if fist byte != '-', jump to loop
+	jnz	.LOOP		; if first byte != '-', jump to loop
 
 .INIT_NEG:			; ... else
 	inc	rdi		; inc once pointer to skip '-'
