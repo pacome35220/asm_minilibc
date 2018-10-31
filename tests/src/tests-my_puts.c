@@ -36,7 +36,7 @@ static void fini(void)
 
 static char *get_stdout(int (*ptr)(const char *s), int *res, char *s)
 {
-	char buff[8] = { '\0' };
+	char buff[256] = { '\0' };
 	int fd[2];
 	pid_t pid;
 
@@ -44,7 +44,7 @@ static char *get_stdout(int (*ptr)(const char *s), int *res, char *s)
 	pid = fork();
 	assert(pid != -1);
 	if (pid == 0) {
-		dup2(fd[1], STDOUT_FILENO);
+		assert(dup2(fd[1], STDOUT_FILENO) != -1);
 		exit((*ptr)(s));
 	} else {
 		assert(read(fd[0], buff, sizeof(buff)) != -1);
@@ -78,11 +78,14 @@ Test(utils, empty_string, .init = init, .fini = fini)
 	assert(ret_sys == my_ret);
 	assert(strcmp(s1, s2) == 0);
 }
+*/
 
-Test(utils, null_ptr, .init = init, .fini = fini)
+/*
+Test(utils, null_ptr, .init = init, .fini = fini, .signal=SIGSEGV)
 {
 	s1 = get_stdout(my_puts, &my_ret, NULL);
 	s2 = get_stdout(puts, &ret_sys, NULL);
 	assert(ret_sys == my_ret);
 	assert(strcmp(s1, s2) == 0);
 }
+*/

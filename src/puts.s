@@ -2,7 +2,6 @@
 	section	.text
 
 puts:
-	xor	r8, r8	; r8 is byte written counter
 	xor	rdx, rdx	; rdx (index) will be strlen(s) => string length
 
 .STRLEN:
@@ -12,26 +11,25 @@ puts:
 	jmp	.STRLEN		; loop
 
 .WRITE:
+	;; write string
+
 	mov	rsi, rdi	; rsi => pointer (string)
 	mov	rdi, 1		; rdi => stdout
 	mov	rax, 1		; write : syscall 1
 	syscall
-	cmp	rax, rdx	; if write() != string length
-	jnz	.ERROR		; return -1
-	add	r8, rdx
 
-	mov     r10, rsp	; save stack pointer to r10
-	sub	rsp, 1		; space for buffer, 1 byte
-	mov	BYTE[rsp], 10	; write '\n' (10 ascii) in buffer
-	mov	rsi, rsp	; buffer => rsi
+	mov	rbx, rdx	; rbx => tmp length
+
+	;; write new line
+
+	mov	rdi, 1		; rdi => stdout
+	mov	rsi, newline	; rsi => read-only data
 	mov	rdx, 1		; rdx => 1 byte
 	mov	rax, 1		; write : syscall 1
 	syscall
-	mov	rsp, r10
-	add	rax, r8
+	add	rbx, rax	; rbx => new length
+	mov	rax, rbx	; return written length
 	ret
 
-.ERROR:
-	mov	rax, -1		; puts() return EOF (-1) on error
-	mov     rsp, r10        ; restore stack pointer
-	ret
+	section .rodata
+newline:	db	10	; 10 ascii => \n
