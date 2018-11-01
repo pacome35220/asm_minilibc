@@ -44,13 +44,15 @@ bonus:
 
 clean:
 		@make clean -C $(BONUS_DIR) --no-print-directory
-		@make fclean -C $(TESTS_DIR) --no-print-directory
+		@make clean -C $(TESTS_DIR) --no-print-directory
 		@$(RM) $(OBJ)
 
 fclean:		clean
 		@make fclean -C $(BONUS_DIR) --no-print-directory
 		@make fclean -C $(TESTS_DIR) --no-print-directory
 		@$(RM) $(NAME)
+		@$(RM) $(TESTS_DIR)$(NAME)
+
 
 tests_run:	re
 		mv $(NAME) $(TESTS_DIR)
