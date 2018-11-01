@@ -1,4 +1,8 @@
 	global	puts:function
+	section .rodata
+
+NEWLINE:	db	10	; 10 ascii => \n
+
 	section	.text
 
 puts:
@@ -11,6 +15,10 @@ puts:
 	jmp	.STRLEN		; loop
 
 .WRITE:
+	mov	rbx, rdx	; rbx => tmp length
+	cmp	rdx, 0		; if (*s == '\0')
+	jz	.WRITE_NEWLINE	; just display newline
+
 	;; write string
 
 	mov	rsi, rdi	; rsi => pointer (string)
@@ -18,18 +26,16 @@ puts:
 	mov	rax, 1		; write : syscall 1
 	syscall
 
-	mov	rbx, rdx	; rbx => tmp length
 
 	;; write new line
 
+.WRITE_NEWLINE:
+
 	mov	rdi, 1		; rdi => stdout
-	mov	rsi, newline	; rsi => read-only data
+	mov	rsi, NEWLINE	; rsi => read-only data
 	mov	rdx, 1		; rdx => 1 byte
 	mov	rax, 1		; write : syscall 1
 	syscall
-	add	rbx, rax	; rbx => new length
-	mov	rax, rbx	; return written length
-	ret
 
-	section .rodata
-newline:	db	10	; 10 ascii => \n
+	add	rax, rbx	; add old length (rbx) => return written length
+	ret

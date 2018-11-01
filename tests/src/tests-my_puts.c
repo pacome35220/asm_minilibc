@@ -36,7 +36,7 @@ static void fini(void)
 
 static char *get_stdout(int (*ptr)(const char *s), int *res, char *s)
 {
-	char buff[256] = { '\0' };
+	char buff[512] = { '\0' };
 	int fd[2];
 	pid_t pid;
 
@@ -78,7 +78,6 @@ Test(utils, empty_string, .init = init, .fini = fini)
 	assert(ret_sys == my_ret);
 	assert(strcmp(s1, s2) == 0);
 }
-*/
 
 /*
 Test(utils, null_ptr, .init = init, .fini = fini, .signal=SIGSEGV)
