@@ -1,6 +1,8 @@
 	global	puts:function
 	section .rodata
 
+	;; int puts(const char *s)
+
 NEWLINE:	db	10	; 10 ascii => \n
 
 	section	.text

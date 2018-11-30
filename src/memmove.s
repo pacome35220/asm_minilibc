@@ -1,6 +1,8 @@
 	global	memmove:function
 	section	.text
 
+	;; void *memmove(void *dest, const void *src, size_t n)
+
 memmove:
 	cmp	rsi, rdi
 	jb	.MEMCPY
@@ -18,7 +20,7 @@ memmove:
 	cmp	rdx, 0
 	jz	.EXIT
 
-.LOOP:
+.LOOP:				; memcpy loop
 	dec	rdx
 	mov	r8b, BYTE[rsi + rdx]
 	mov	BYTE[rdi + rdx], r8b

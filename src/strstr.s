@@ -1,6 +1,8 @@
 	global	strstr:function
 	section	.text
 
+	;; char *strstr(const char *haystack, const char *needle)
+
 strstr:
 	mov	rax, rdi
 	cmp	BYTE[rax], 0	; if (*s1 == '\0') && ... => handle strstr("", "")

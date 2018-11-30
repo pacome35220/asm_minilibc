@@ -1,6 +1,8 @@
 	global	strchr:function
 	section	.text
 
+	;; char *strchr(const char *s, int c)
+
 strchr:	mov	rax, rdi	; mov first parameter to rax (return value)
 
 .LOOP:

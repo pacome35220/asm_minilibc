@@ -1,6 +1,8 @@
 	global	strpbrk:function
 	section	.text
 
+	;; char *strpbrk(const char *s, const char *accept)
+
 strpbrk:
 	mov	rax, rdi
 

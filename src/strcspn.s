@@ -1,6 +1,8 @@
 	global	strcspn:function
 	section	.text
 
+	;; int strncmp(const char *s1, const char *s2, size_t n)
+
 strcspn:
 	mov	rax, rdi
 

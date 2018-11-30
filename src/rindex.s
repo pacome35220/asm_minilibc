@@ -1,6 +1,8 @@
 	global	rindex:function
 	section	.text
 
+	;; int putchar(int c)
+
 rindex:
 	mov	rax, rdi	; mov first parameter to rax (return value)
 

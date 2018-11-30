@@ -1,6 +1,8 @@
 	global	strcasecmp:function
 	section	.text
 
+	;; int int strcasecmp(const char *s1, const char *s2)
+
 strcasecmp:
 	xor	rax, rax
 	xor	r8, r8

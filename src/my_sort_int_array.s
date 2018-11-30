@@ -1,6 +1,8 @@
 	global	my_sort_int_array:function
 	section	.text
 
+	;; void my_sort_int_array(int *arr, int size)
+
 my_sort_int_array:
 	cmp	esi, 2		; if (size < 2)
 	jl	.EXIT		; don't try to sort anything, jump if lower

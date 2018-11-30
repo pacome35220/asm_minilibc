@@ -1,6 +1,8 @@
 	global	memcpy:function
 	section	.text
 
+	;; void *memcpy(void *dest, const void *src, size_t n)
+
 memcpy:
 	mov	rax, rdi	; return a pointer to dest (rdi)
 	cmp	rdx, 0		; if (n == 0)

@@ -1,6 +1,8 @@
 	global	strlen:function
 	section	.text
 
+	;; size_t strlen(const char *s)
+
 strlen:	xor	rax, rax	; set index to 0
 
 .LOOP:

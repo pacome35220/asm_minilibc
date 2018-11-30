@@ -1,6 +1,8 @@
 	global	putchar:function
 	section	.text
 
+	;; int putchar(int c)
+
 putchar:
 	mov	r10, rsp	; save stack pointer to r10
 	sub	rsp, 4		; space for buffer, 4 bytes (putchar parameter : int)
