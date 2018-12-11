@@ -16,9 +16,9 @@ atoi:
 .LOOP:
 	mov	r8b, BYTE[rdi]	; r8b use as tmp variable (8-bit part of r8)
 	cmp	r8b, 0x30	; 0x30 => '0'
-	jb	.EXIT		; jump if (r8b < 'A')
+	jl	.EXIT		; jump if lower (r8b < '0')
 	cmp	r8b, 0x39	; 0x39 => '9'
-	ja	.EXIT		; jump if (r8b > 'Z')
+	jg	.EXIT		; jump if greater (r8b > '9')
 
 	imul	eax, 10		; eax *= 10
 	add	eax, r8d	; 64-bit (complete) of r8b
