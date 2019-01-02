@@ -1,29 +1,29 @@
 	global	strcspn:function
 	section	.text
 
-	;; int strncmp(const char *s1, const char *s2, size_t n)
+	;; size_t strcspn(const char *s, const char *reject)
 
 strcspn:
-	mov	rax, rdi
+	mov	rax, rdi	; mov first parameter to rax (return value)
 
 .LOOP:
-	cmp	BYTE[rax], 0
-	jz	.END
-	xor	rcx, rcx	; rcx use as index of rsi
+	cmp	BYTE[rax], 0	; if (*s == '\0')
+	jz	.END		; return rax - s
+	xor	rcx, rcx	; rcx use as index
 
 .CMP:
-	mov	r8b, BYTE[rsi + rcx] ; r8b -> tmp = rsi[rcx]
-	cmp	r8b, 0		; while (rsi[rcx] != 0)
-	jz	.END_WHILE
-	cmp	BYTE[rax], r8b	; if (*s == rsi[rcx])
-	jz	.END
+	mov	r8b, BYTE[rsi + rcx] ; r8b -> tmp = reject[rcx]
+	cmp	r8b, 0		; while (reject[rcx] != 0)
+	jz	.END_WHILE	; jump to rcx++
+	cmp	BYTE[rax], r8b	; if (*s == reject[rcx])
+	jz	.END		; return rax - s
 	inc	rcx		; rcx++
-	jmp	.CMP
+	jmp	.CMP		; loop reject[rcx]
 
 .END_WHILE:
-	inc	rax
-	jmp	.LOOP
+	inc	rax		; rax++
+	jmp	.LOOP		; main loop
 
 .END:
-	sub	rax, rdi
+	sub	rax, rdi	; rax -= s
 	ret
