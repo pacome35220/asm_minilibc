@@ -33,7 +33,7 @@ static void fini(void)
 	free(str2);
 }
 
-Test(utils, simple_strcasecmp, .init = init, .fini = fini)
+Test(utils, simple, .init = init, .fini = fini)
 {
 	str = strdup("bonjour");
 	str2 = strdup("hello");
@@ -41,7 +41,7 @@ Test(utils, simple_strcasecmp, .init = init, .fini = fini)
 	cr_assert(strcasecmp(str, str2) == (*my_strcasecmp)(str, str2));
 }
 
-Test(utils, good_strcasecmp, .init = init, .fini = fini)
+Test(utils, good, .init = init, .fini = fini)
 {
 	str = strdup("boNJOur");
 	str2 = strdup("bonjour");
@@ -49,7 +49,7 @@ Test(utils, good_strcasecmp, .init = init, .fini = fini)
 	cr_assert(strcasecmp(str, str2) == (*my_strcasecmp)(str, str2));
 }
 
-Test(utils, not_good_strcasecmp, .init = init, .fini = fini)
+Test(utils, not_good, .init = init, .fini = fini)
 {
 	str = strdup("bonJouR");
 	str2 = strdup("bonjour2");
@@ -57,10 +57,18 @@ Test(utils, not_good_strcasecmp, .init = init, .fini = fini)
 	cr_assert(strcasecmp(str, str2) == (*my_strcasecmp)(str, str2));
 }
 
-Test(utils, not_good_strcasecmp2, .init = init, .fini = fini)
+Test(utils, not_good2, .init = init, .fini = fini)
 {
 	str = strdup("bonjour2");
 	str2 = strdup("bonJouR");
+	assert(str && str2);
+	cr_assert(strcasecmp(str, str2) == (*my_strcasecmp)(str, str2));
+}
+
+Test(utils, alphabet, .init = init, .fini = fini)
+{
+	str = strdup("azertyuiopqsdfghjklmwxcvbn");
+	str2 = strdup("AZERTYUIOPQSDFGHJKLMWXCVBN");
 	assert(str && str2);
 	cr_assert(strcasecmp(str, str2) == (*my_strcasecmp)(str, str2));
 }
