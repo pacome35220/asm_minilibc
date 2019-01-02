@@ -4,24 +4,24 @@
 	;; int strcmp(const char *s1, const char *s2)
 
 strcmp:
-	xor	rax, rax
+	xor	rax, rax	; set return value to 0
 
 .LOOP:
-	mov	al, BYTE[rdi]
-	cmp	BYTE[rsi], al
-	jnz	.DIFF
-	cmp	BYTE[rdi], 0
-	jz	.EXIT
-	inc	rsi
-	inc	rdi
-	jmp	.LOOP
+	mov	al, BYTE[rdi]	; al is 8 bytes part of rax : al = *s1
+	cmp	BYTE[rsi], al	; if (*s2 != *s1)
+	jnz	.DIFF		; return *s2 - *s1
+	cmp	al, 0		; if (*s1 == '\0')
+	jz	.EXIT		; jump to return 0
+	inc	rdi		; s1++
+	inc	rsi		; s2++
+	jmp	.LOOP		; loop
 
 .DIFF:
-	xor	ecx, ecx
-	mov	cl, BYTE[rsi]
-	sub	eax, ecx
-	ret
+	xor	ecx, ecx	; init tmp to 0
+	mov	cl, BYTE[rsi]	; cl is 8 bytes part of rcx : cl = *s2
+	sub	eax, ecx	; eax (return value) = eax -= *s2
+	ret			; return *s2 - *s1
 
 .EXIT:
-	xor	rax, rax
+	xor	rax, rax	; return 0
 	ret
