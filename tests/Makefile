@@ -21,8 +21,8 @@ SRC		=				\
 		$(SRC_DIR)tests-my_strcasecmp.c	\
 		$(SRC_DIR)tests-my_atoi.c	\
 		$(SRC_DIR)tests-my_putchar.c	\
-		$(SRC_DIR)tests-my_puts.c	\
-		$(SRC_DIR)tests-my_sort_int_array.c
+		$(SRC_DIR)tests-my_sort_int_array.c	\
+#		$(SRC_DIR)tests-my_puts.c
 
 OBJ		=	$(SRC:.c=.o)
 

@@ -23,8 +23,8 @@ SRC		=	$(SRC_DIR)strlen.s	\
 			$(SRC_DIR)strcspn.s	\
 			$(SRC_DIR)atoi.s	\
 			$(SRC_DIR)putchar.s	\
-			$(SRC_DIR)puts.s	\
-			$(SRC_DIR)my_sort_int_array.s
+			$(SRC_DIR)my_sort_int_array.s	\
+#			$(SRC_DIR)puts.s
 
 OBJ		=	$(SRC:.s=.o)
 
