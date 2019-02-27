@@ -20,8 +20,6 @@ strcmp:
 	xor	ecx, ecx	; init tmp to 0
 	mov	cl, BYTE[rsi]	; cl is 8 bytes part of rcx : cl = *s2
 	sub	eax, ecx	; eax (return value) = eax -= *s2
-	ret			; return *s2 - *s1
 
 .EXIT:
-	xor	rax, rax	; return 0
-	ret
+	ret			; return either *s1 - *s2, or 0
