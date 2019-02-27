@@ -38,27 +38,26 @@ $(NAME):	$(OBJ)
 		$(LD) -o $(NAME) $(OBJ) $(LDFLAGS)
 
 bonus:
-		make re -C $(BONUS_DIR) --no-print-directory
+		@$(MAKE) re -C $(BONUS_DIR) --no-print-directory
 
 %.o:		%.s
 		nasm -felf64 $< -o $@
 
 clean:
-		@make clean -C $(BONUS_DIR) --no-print-directory
-		@make clean -C $(TESTS_DIR) --no-print-directory
+		@$(MAKE) clean -C $(BONUS_DIR) --no-print-directory
+		@$(MAKE) clean -C $(TESTS_DIR) --no-print-directory
 		@$(RM) $(OBJ)
 
 fclean:		clean
-		@make fclean -C $(BONUS_DIR) --no-print-directory
-		@make fclean -C $(TESTS_DIR) --no-print-directory
+		@$(MAKE) fclean -C $(BONUS_DIR) --no-print-directory
+		@$(MAKE) fclean -C $(TESTS_DIR) --no-print-directory
 		@$(RM) $(NAME)
 		@$(RM) $(TESTS_DIR)$(NAME)
 
-
 tests_run:	re
 		mv $(NAME) $(TESTS_DIR)
-		@make -C $(TESTS_DIR) --no-print-directory
+		@$(MAKE) -C $(TESTS_DIR) --no-print-directory
 
 re:		fclean all
 
-.PHONY:		all clean fclean re
+.PHONY:		all bonus clean fclean tests_run re

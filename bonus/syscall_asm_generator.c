@@ -16,9 +16,10 @@
 char *get_next_line(int fd);
 
 #define	FLAGS		(O_CREAT | O_RDWR | O_TRUNC)
-#define	MODE		(S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH)
+#define	MODE		(0664)
+#define SKIP		("#define __NR_")
 
-const char *file = "\tglobal\t%s:function\n\tsection\t.text\n\n%s:\n\tmov\trax, %d\n\tsyscall\n\tret";
+const char *file = "\tglobal\t%s:function\n\tsection\t.text\n\n%s:\n\tmov\trax, %d\n\tsyscall\n\tret\n";
 
 char *my_snprintf(const char *format, ...)
 {
@@ -27,17 +28,19 @@ char *my_snprintf(const char *format, ...)
 	int len;
 
 	if (!format)
-		return (NULL);
+		return NULL;
 	va_start(ap, format);
-	if ((len = vsnprintf(NULL, 0, format, ap)) < 0)
-		return (NULL);
-	if (!(new = malloc(sizeof(char) * (len + 1))))
-		return (NULL);
+	len = vsnprintf(NULL, 0, format, ap);
+	if (len < 0)
+		return NULL;
+	new = malloc(sizeof(char) * (len + 1));
+	if (!new)
+		return NULL;
 	va_end(ap);
 	va_start(ap, format);
 	vsnprintf(new, len + 1, format, ap);
 	va_end(ap);
-	return (new);
+	return new;
 }
 
 void create_asm_file(char *syscall_name, int i)
@@ -51,7 +54,7 @@ void create_asm_file(char *syscall_name, int i)
 	write(fd, buffer, strlen(buffer));
 }
 
-int main()
+int main(void)
 {
 	char *line;
 	int fd = open("/usr/include/asm/unistd_64.h", O_RDONLY);
@@ -61,10 +64,12 @@ int main()
 		return 1;
 	}
 	for (int i = 0; (line = get_next_line(fd)) != NULL; i++) {
-		if (i < 3 || strncmp(line, "#define __NR_", sizeof("#define __NR_") - 1))
+		if (i < 3 || strncmp(line, SKIP, sizeof(SKIP) - 1))
 			continue;
 		*strrchr(line, ' ') = '\0';
-		create_asm_file(line + sizeof("#define __NR_") - 1, i - 3);
+		if (strcmp("times", line + sizeof(SKIP)))
+			create_asm_file(line + sizeof(SKIP) - 1, i - 3);
+		free(line);
 	}
 	return 0;
 }

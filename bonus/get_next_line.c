@@ -17,7 +17,7 @@ static char *my_strcat(char *dest, char *src)
 	char *new = malloc(sizeof(char) * (len + 1));
 
 	if (!new)
-		return (NULL);
+		return NULL;
 	if (dest != NULL)
 		for (; dest[i] != '\0'; i++)
 			new[i] = dest[i];
@@ -26,7 +26,7 @@ static char *my_strcat(char *dest, char *src)
 			new[i] = *src;
 	new[i] = '\0';
 	free(dest);
-	return (new);
+	return new;
 }
 
 static char *my_dup(char *src, size_t n, char *tofree)
@@ -35,13 +35,14 @@ static char *my_dup(char *src, size_t n, char *tofree)
 	size_t len = (src ? strlen(src) : 0);
 	char *new_str;
 
-	if (!(new_str = malloc(sizeof(char) * (len + 1))))
-		return (NULL);
+	new_str = malloc(sizeof(char) * (len + 1));
+	if (!new_str)
+		return NULL;
 	for (; i < n && src[i] != '\0'; i++)
 		new_str[i] = src[i];
 	new_str[i] = '\0';
 	free(tofree);
-	return (new_str);
+	return new_str;
 }
 
 static ssize_t check_back_n(char *str)
@@ -59,22 +60,24 @@ char *get_next_line(int fd)
 	ssize_t size = 0;
 	ssize_t pos_back_n = 0;
 	char buffer[BUFSIZ + 1];
-	static char *tmp = NULL;
+	static char *tmp;
 	char *rest_line = NULL;
 
-	if ((pos_back_n = check_back_n(tmp)) == -1) {
-		if ((size = read(fd, buffer, BUFSIZ)) > 0) {
+	pos_back_n = check_back_n(tmp);
+	if (pos_back_n == -1) {
+		size = read(fd, buffer, BUFSIZ);
+		if (size > 0) {
 			buffer[size] = '\0';
 			tmp = my_strcat(tmp, buffer);
-			return (*buffer == '\0' ? NULL : get_next_line(fd));
+			return *buffer == '\0' ? NULL : get_next_line(fd);
 		}
 		if (!tmp || *tmp == '\0')
-			return (free(tmp), tmp = NULL, NULL);
+			return free(tmp), tmp = NULL, NULL;
 		rest_line = my_dup(tmp, strlen(tmp), tmp);
 		tmp = NULL;
-		return (rest_line);
+		return rest_line;
 	}
 	rest_line = my_dup(tmp, pos_back_n, NULL);
 	tmp = my_dup(tmp + pos_back_n + 1, strlen(tmp + pos_back_n), tmp);
-	return (rest_line);
+	return rest_line;
 }
