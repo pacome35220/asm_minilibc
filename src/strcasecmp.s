@@ -12,16 +12,16 @@ strcasecmp:
 	mov	r8b, BYTE[rdi]	; r8b = *s1
 	mov	r9b, BYTE[rsi]	; r9b = *s2
 	cmp	r8b, 0x41	; 0x41 -> 'A'
-	jb	.ARGV_2		; if (r8b < 'A')
+	jl	.ARGV_2		; if (r8b < 'A')
 	cmp	r8b, 0x5A	; 0x51 -> 'Z'
-	ja	.ARGV_2		; if (r8b > 'Z')
+	jg	.ARGV_2		; if (r8b > 'Z')
 	add	r8b, 0x20	; "else" 0x20 -> ' ' -> ('a' - 'A')
 
 .ARGV_2:
 	cmp	r9b, 0x41	; if (*s2 < 'A')
-	jb	.STRCMP		; jump to compare
+	jl	.STRCMP		; jump to compare
 	cmp	r9b, 0x5A	; if (*s2 > 'Z')
-	ja	.STRCMP		; jump to compare
+	jg	.STRCMP		; jump to compare
 	add	r9b, 0x20	; "else" 0x20 -> ' ' -> ('a' - 'A')
 
 .STRCMP:
