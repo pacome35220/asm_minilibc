@@ -70,3 +70,23 @@ Test(utils, one_char, .init = init, .fini = fini)
 	cr_assert(ret == buff1 && sys == buff2);
 	cr_assert(strcmp(buff1, buff2) == 0);
 }
+
+Test(utils, copy_struct_, .init = init, .fini = fini)
+{
+	struct data {
+		int i;
+		char *p;
+		short s;
+	};
+	struct data dest;
+	struct data src = { .i = 4, .p = "mdr", .s = 42 };
+
+	struct data *ret = memset(&dest, '\0', sizeof(struct data));
+	struct data *sys = memset(&src, '\0', sizeof(struct data));
+
+	ret = (*my_memcpy)(&dest, &src, sizeof(struct data));
+	sys = memcpy(&dest, &src, sizeof(struct data));
+
+	cr_assert(ret == sys);
+	cr_assert(memcmp(&dest, &src, sizeof(struct data)) == 0);
+}
