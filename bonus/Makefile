@@ -24,14 +24,16 @@ LDFLAGS		=	-shared
 NAME		=	syscall_asm_generator
 BONUS_NAME	=	libsyscall_asm.so
 
+all:
+		@$(MAKE) generator --no-print-directory
+		@$(MAKE) asm --no-print-directory
+
 generator:	$(OBJ)
 		$(CC) -o $(NAME) $(OBJ)
 		./$(NAME)
 
 asm:		$(BONUS_OBJ)
 		$(LD) -o $(BONUS_NAME) $(BONUS_OBJ) $(LDFLAGS)
-
-all:		generator asm
 
 %.o:		%.s
 		nasm -felf64 $< -o $@
@@ -46,6 +48,6 @@ fclean:		clean
 		@$(RM) $(BONUS_SRC)
 		@$(RM) $(SYSCALL_DIR)times.s
 
-re:		fclean generator asm
+re:		fclean all
 
 .PHONY:		all clean fclean re generator asm
